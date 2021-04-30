@@ -161,6 +161,7 @@ struct ContentView: View {
         var domainAverage = 0.0
         var tempStringForRangePlot = ""
         
+        
         for _ in (1..<16) {
             
             // now how do I coreplot?

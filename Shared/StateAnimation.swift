@@ -43,7 +43,7 @@ class StateAnimationClass: NSObject, ObservableObject {
         //spinDownData = []
     }
     
-    func plotState (state: [Double], n: Double) {
+    func drawState (state: [Double], n: Double) {
         
         //let boundingBoxCalculator = BoundingBox() ///Instantiates Class needed to calculate the area of the bounding box.
         

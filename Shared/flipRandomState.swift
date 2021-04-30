@@ -33,6 +33,7 @@ class FlipRandomState: ObservableObject {
         var state: [Double] = []
         let temp = Double(tempStr)!
         let N = Int(NStr)!
+        avgDomain = 0.0
         
         //var box = 0.0
         
@@ -50,7 +51,7 @@ class FlipRandomState: ObservableObject {
             
         }
         else {
-            self.stateAnimate!.plotState(state: state, n: Double(0.0))
+            self.stateAnimate!.drawState(state: state, n: Double(0.0))
         }
         // If I change this, I need to change the following in ContentView: stateAnimate.xMax = 800.0*Double(numElectronString)!
         //let M = 10*N
@@ -92,13 +93,13 @@ class FlipRandomState: ObservableObject {
                         
                         state = trialRandomFlip.map { $0 } // .map { $0 } replace all elements one at a time
                         ES = ET
-                        let plotStateArr = state.map { $0 }
+                        let drawStateArr = state.map { $0 }
                         
                         DispatchQueue.main.async{
                             //Update Display With Started Queue Thread On the Main Thread
                             //self.stateString = "\(state)"
                             if self.stateAnimate == nil{}
-                            else{self.stateAnimate!.plotState(state: plotStateArr, n: Double(n))}
+                            else{self.stateAnimate!.drawState(state: drawStateArr, n: Double(n))}
                             
                         }
                         
@@ -115,14 +116,14 @@ class FlipRandomState: ObservableObject {
                             //print("rand =", randnum, "p =", p)
                             state = trialRandomFlip.map { $0 }     // .map { $0 } replace all elements one at a time
                             ES = ET                     // ES stays as is if probability of trial is too low
-                            let plotStateArr = state.map { $0 }
+                            let drawStateArr = state.map { $0 }
                             //print("not less than", n)
                             DispatchQueue.main.async{
-                                //self.stateAnimate!.plotState(state: state, n: Double(n))
+                                //self.stateAnimate!.drawState(state: state, n: Double(n))
                                 //Update Display With Started Queue Thread On the Main Thread
                                 //self.stateString = "\(state)"
                                 if self.stateAnimate == nil {}
-                                else{self.stateAnimate!.plotState(state: plotStateArr, n: Double(n))}
+                                else{self.stateAnimate!.drawState(state: drawStateArr, n: Double(n))}
                             }
                             //print(ES)
                         }
@@ -131,11 +132,11 @@ class FlipRandomState: ObservableObject {
                             trialRandomFlip = state.map { $0 }
                             
                             DispatchQueue.main.async{
-                                //self.stateAnimate!.plotState(state: state, n: Double(n))
+                                //self.stateAnimate!.drawState(state: state, n: Double(n))
                                 //Update Display With Started Queue Thread On the Main Thread
                                 //self.stateString = "\(state)"
                                 if self.stateAnimate == nil {}
-                                else{self.stateAnimate!.plotState(state: state, n: Double(n))}
+                                else{self.stateAnimate!.drawState(state: state, n: Double(n))}
                             }
                         }
                         
@@ -246,7 +247,7 @@ class FlipRandomState: ObservableObject {
                 //print("sizes of domains: \(domainSizesArr)")
                 let sumOfDomain = Double(state.count)
                 self.avgDomain = sumOfDomain / lengthOfDomainSizeArr
-                //print("avg domain size within else loop contained in flip: \(self.avgDomain)")
+                print("\navg domain size within async: \(self.avgDomain)")
 
             }
             
@@ -268,7 +269,7 @@ class FlipRandomState: ObservableObject {
                     
         let dataPoint: plotDataType = [.X: 0.0, .Y: 0.0]
             plotDataModel!.appendData(dataPoint: [dataPoint])*/
-        print("avg domain size outside async: \(self.avgDomain)")
+        print("\navg domain size outside async: \(self.avgDomain)")
         return self.avgDomain
     }
     
