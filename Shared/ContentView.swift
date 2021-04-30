@@ -5,6 +5,9 @@
 //  Created by Matthew Adas on 4/23/21.
 //
 
+// see plotForTempRange for issues
+// weird problem is that if I don't use the other button, domain size is always zero here. When I do use the other button, this function takes the avg domain size from that function
+
 import SwiftUI
 import CorePlot
 
@@ -153,6 +156,8 @@ struct ContentView: View {
     // compare size of domains
     // x: temp (0:10) do I need to go this high?
     // y: avg of avg domain size (calculate 10 domains to get avg domain size for each temp)
+    
+    // weird problem is that if I don't use the other button, domain size is always zero here. When I do use the other button, this function takes the avg domain size from that function
     func plotForTempRange() {
         
         var tempDouble = 0.5
@@ -170,13 +175,13 @@ struct ContentView: View {
             
             tempStringForRangePlot = String(tempDouble)
             var oneAvgDomainSize = 0.0
-            print(tempDouble) //currently goes to 2.0
+            //print(tempDouble) //currently goes to 2.0
             // average of 10 results of the same temp
             for _ in (1..<11) {
                 
                 oneAvgDomainSize = flip.randomNumber(randomQueue: randomQueue, tempStr: tempStringForRangePlot, NStr: numElectronString )
                 sumAvgs += oneAvgDomainSize
-                //print("sum domain avg", sumAvgs, "one average in loop", oneAvgDomainSize)
+                print("sum domain avg", sumAvgs, "one average in loop", oneAvgDomainSize)
             }
             
             domainAverage = sumAvgs / 10 // finally the Y-AXIS value, average domain size promised for 10 iterations of one given temp
@@ -184,7 +189,6 @@ struct ContentView: View {
             // for plot now
             // y = domainAverage
             // x = tempDouble
-            
             
             let dataPoint: plotDataType = [.X: tempDouble, .Y: domainAverage]
             plotData.append(contentsOf: [dataPoint])

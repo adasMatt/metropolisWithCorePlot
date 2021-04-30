@@ -249,9 +249,9 @@ class FlipRandomState: ObservableObject {
                 //print("sizes of domains: \(domainSizesArr)")
                 let sumOfDomain = Double(state.count)
                 avgDomainInAsync = sumOfDomain / lengthOfDomainSizeArr
-                print("\navg domain size within async: \(avgDomainInAsync)")
+                //print("\navg domain size within async: \(avgDomainInAsync)")
                 self.avgDomain = avgDomainInAsync
-                print("\nset state var avg domain size within async: \(self.avgDomain)")
+                //print("\nset state var avg domain size within async: \(self.avgDomain)")
 
             }
             
