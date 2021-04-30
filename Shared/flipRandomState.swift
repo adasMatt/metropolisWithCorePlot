@@ -16,6 +16,8 @@ class FlipRandomState: ObservableObject {
     @Published var stop = DispatchTime.now()  //Stop tim
     var plotDataModel: PlotDataClass? = nil
     var avgDomain = 0.0
+    //var avgDomainInAsync = 0.0
+    
     //@State var initialStateTextString = "cold start (see code for \"hot start\" need to add a picker)"
     
     // but should I call IsingClass here or should this just be part of IsingClass, used here: "var ES = ising.energyCalculation(S: state, N: N)"
@@ -33,7 +35,7 @@ class FlipRandomState: ObservableObject {
         var state: [Double] = []
         let temp = Double(tempStr)!
         let N = Int(NStr)!
-        avgDomain = 0.0
+        var avgDomainInAsync = 0.0
         
         //var box = 0.0
         
@@ -246,8 +248,10 @@ class FlipRandomState: ObservableObject {
                 }
                 //print("sizes of domains: \(domainSizesArr)")
                 let sumOfDomain = Double(state.count)
-                self.avgDomain = sumOfDomain / lengthOfDomainSizeArr
-                print("\navg domain size within async: \(self.avgDomain)")
+                avgDomainInAsync = sumOfDomain / lengthOfDomainSizeArr
+                print("\navg domain size within async: \(avgDomainInAsync)")
+                self.avgDomain = avgDomainInAsync
+                print("\nset state var avg domain size within async: \(self.avgDomain)")
 
             }
             

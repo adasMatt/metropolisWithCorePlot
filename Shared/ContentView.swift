@@ -161,7 +161,6 @@ struct ContentView: View {
         var domainAverage = 0.0
         var tempStringForRangePlot = ""
         
-        
         for _ in (1..<16) {
             
             // now how do I coreplot?
@@ -177,7 +176,7 @@ struct ContentView: View {
                 
                 oneAvgDomainSize = flip.randomNumber(randomQueue: randomQueue, tempStr: tempStringForRangePlot, NStr: numElectronString )
                 sumAvgs += oneAvgDomainSize
-                print("sum domain avg", sumAvgs, "one average in loop", oneAvgDomainSize)
+                //print("sum domain avg", sumAvgs, "one average in loop", oneAvgDomainSize)
             }
             
             domainAverage = sumAvgs / 10 // finally the Y-AXIS value, average domain size promised for 10 iterations of one given temp
@@ -193,7 +192,6 @@ struct ContentView: View {
             flip.plotDataModel = self.plotDataModel
             
             tempDouble += 0.1   // increase temp for CorePlot
-            
             
             
         }
