@@ -4,7 +4,7 @@
 //
 //  Created by Matthew Adas on 4/9/21.
 //
-
+// working on "thermodynamic properties"
 
 import Foundation
 import SwiftUI
@@ -16,6 +16,8 @@ class FlipRandomState: ObservableObject {
     @Published var stop = DispatchTime.now()  //Stop tim
     var plotDataModel: PlotDataClass? = nil
     var avgDomain = 0.0
+    @Published var energyFromRandom = 0.0
+    @Published var magnitizationFromRandom = 0.0
     //var avgDomainInAsync = 0.0
     
     //@State var initialStateTextString = "cold start (see code for \"hot start\" need to add a picker)"
@@ -24,7 +26,6 @@ class FlipRandomState: ObservableObject {
     @State var ising = IsingClass()
     //@ObservedObject var stateAnimate = StateAnimationClass(withData: true)
     var stateAnimate : StateAnimationClass? = nil
-    
     
     
     //func randomNumber(randomQueue: DispatchQueue, tempStr: String, NStr: String, stateString: String)  {
@@ -49,15 +50,13 @@ class FlipRandomState: ObservableObject {
             state.append(-1)
         }
         
-        if stateAnimate == nil {
-            
-        }
+        if stateAnimate == nil {}
         else {
             self.stateAnimate!.drawState(state: state, n: Double(0.0))
         }
         // If I change this, I need to change the following in ContentView: stateAnimate.xMax = 800.0*Double(numElectronString)!
-        //let M = 10*N
-        let M = 250
+        let M = 10*N
+        //let M = 250
         // uncomment this for loop is for a "hot start" ...comment it out for a "cold start"
         /*
         self.initialStateTextString = "hot start"
@@ -95,6 +94,9 @@ class FlipRandomState: ObservableObject {
                         
                         state = trialRandomFlip.map { $0 } // .map { $0 } replace all elements one at a time
                         ES = ET
+                        // problem not sure if this will work
+                        DispatchQueue.main.async{self.energyFromRandom = ES}
+                        print("\nin ET < ES: energyFromRandom =", self.energyFromRandom)
                         let drawStateArr = state.map { $0 }
                         
                         DispatchQueue.main.async{
@@ -102,7 +104,6 @@ class FlipRandomState: ObservableObject {
                             //self.stateString = "\(state)"
                             if self.stateAnimate == nil{}
                             else{self.stateAnimate!.drawState(state: drawStateArr, n: Double(n))}
-                            
                         }
                         
                         //print("less than", n)
@@ -118,6 +119,9 @@ class FlipRandomState: ObservableObject {
                             //print("rand =", randnum, "p =", p)
                             state = trialRandomFlip.map { $0 }     // .map { $0 } replace all elements one at a time
                             ES = ET                     // ES stays as is if probability of trial is too low
+                            // problem not sure if this will work
+                            DispatchQueue.main.async{self.energyFromRandom = ES}
+                            print("in p>= randnum: energyFromRandom =", self.energyFromRandom)
                             let drawStateArr = state.map { $0 }
                             //print("not less than", n)
                             DispatchQueue.main.async{
@@ -155,8 +159,7 @@ class FlipRandomState: ObservableObject {
                     // delay by some microseconds
                     usleep(10) // add a zero for a more readable speed at lower N
                     //print("\n this is the state \(state) \n and how many \(state.count)")
-                
-                
+                                    
                 }
             //print("it has finished, state at equilibrium: \(state)")
             
@@ -266,14 +269,14 @@ class FlipRandomState: ObservableObject {
         // [0, 1] in 20x20 matrix -> 20th element
                 
         } // end of queue
-        
+        print("\nenergyFromRandom after async", self.energyFromRandom)
         //  ////////////////////////////
         
         /*          // but i'm not plotting error I'm plotting temp and avg domain now
                     
         let dataPoint: plotDataType = [.X: 0.0, .Y: 0.0]
             plotDataModel!.appendData(dataPoint: [dataPoint])*/
-        print("\navg domain size outside async: \(self.avgDomain)")
+        //print("\navg domain size outside async: \(self.avgDomain)")
         return self.avgDomain
     }
     

@@ -37,7 +37,7 @@ class PlotDataClass: NSObject, ObservableObject {
         
         //set the Plot Parameters
         // want temp on x, domain size on y?
-        changingPlotParameters.yMax = 4.0
+        changingPlotParameters.yMax = 40.0
         changingPlotParameters.yMin = -1.0
         changingPlotParameters.xMax = 2.5       // go 0.5 further on both ends for this specific project
         changingPlotParameters.xMin = 0.0

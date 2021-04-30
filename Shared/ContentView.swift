@@ -4,6 +4,8 @@
 //
 //  Created by Matthew Adas on 4/23/21.
 //
+// search "problem" for more problems
+// working on "thermodynamic properties"
 
 // see plotForTempRange for issues
 // weird problem is that if I don't use the other button, domain size is always zero here. When I do use the other button, this function takes the avg domain size from that function. It then adds that one value over and over.
@@ -17,6 +19,8 @@ struct ContentView: View {
     
     @State var tempString = "1.0"
     @State var numElectronString = "100"
+    @State var energyString = ""
+    @State var magnetizeString = ""
     
     //@ObservedObject var ising = IsingClass() // actually not using IsingClass() here
     @ObservedObject var flip = FlipRandomState()
@@ -50,6 +54,23 @@ struct ContentView: View {
                 .frame(width: 100)
                 .padding(.top, 0)
                 .padding(.bottom, 30)
+            
+            Text("(broken) end energy")
+                .padding(.bottom, 0)
+            TextField("", text: $energyString)
+                .padding(.horizontal)
+                .frame(width: 100)
+                .padding(.top, 0)
+                .padding(.bottom, 30)
+            
+            Text("(broken) magnetization")
+                .padding(.bottom, 0)
+            TextField("", text: $magnetizeString)
+                .padding(.horizontal)
+                .frame(width: 100)
+                .padding(.top, 0)
+                .padding(.bottom, 30)
+            
             
             // button
             Button("Generate random states", action: startTheFlipping)
@@ -101,19 +122,9 @@ struct ContentView: View {
             
             HStack{
                 
-                /* think I'll take temp out actually and just plot it
-                // do temp range 0.5 - 2.0 in tenths (0.5, 0.6, 0.7, ..., 2.0)
-                HStack(alignment: .center) {
-                    Text("temp:")
-                        .font(.callout)
-                        .bold()
-                    TextField("temp", text: $tempString)
-                        .padding()
-                }.padding() */
-                
-                // need to plot for different temperatures here, different "action" than other tabs in the GUI, see plotForTempRange function
+                // in the GUI, see plotForTempRange function
                 //
-                Button("Show Average Domain Size for Temp Range 0.5 to 2.0", action: plotForTempRange)
+                Button("(doesn't work yet, and in fact is quite a strange mess) Show Average Domain Size for Temp Range 0.5 to 2.0", action: plotForTempRange)
                     .padding()
                 
             }
@@ -128,7 +139,7 @@ struct ContentView: View {
         }
     }
     
-    func startTheFlipping() {
+    func startTheFlipping() {   // problem: how do I get thermodynamic properties (energy and magnetization) from here to GUI
         
         stateAnimation.spinDownData = []
         stateAnimation.spinUpData = []
@@ -138,15 +149,16 @@ struct ContentView: View {
         let randomQueue = DispatchQueue.init(label: "randomQueue", qos: .userInitiated, attributes: .concurrent)
         
         stateAnimation.xMin = 0.0
-        //stateAnimation.xMax = 10.0*Double(numElectronString)! // if I change this, I need to change the following in flipRandomState: let M = 800*N
-        stateAnimation.xMax = 250.0
+        stateAnimation.xMax = 10.0*Double(numElectronString)! // if I change this, I need to change the following in flipRandomState: let M = 800*N
+        //stateAnimation.xMax = 250.0
         stateAnimation.yMin = 0.0
         stateAnimation.yMax = Double(numElectronString)!
         
         
         flip.stateAnimate = self.stateAnimation
         flip.randomNumber(randomQueue: randomQueue, tempStr: tempString, NStr: numElectronString )
-        
+        energyString = String(flip.energyFromRandom)
+        magnetizeString = String(flip.magnitizationFromRandom)
     }
     /* */
      
@@ -165,13 +177,19 @@ struct ContentView: View {
         var plotData :[plotDataType] =  []
         var domainAverage = 0.0
         var tempStringForRangePlot = ""
+        // now how do I coreplot?
+        //Create a Queue for the Calculation
+        //We do this here so we can make testing easier.
+        let randomQueue = DispatchQueue.init(label: "randomQueue", qos: .userInitiated, attributes: .concurrent)
+        
+        stateAnimation.xMin = 0.0
+        //stateAnimation.xMax = 10.0*Double(numElectronString)! // if I change this, I need to change the following in flipRandomState: let M = 800*N
+        stateAnimation.xMax = 250.0
+        stateAnimation.yMin = 0.0
+        stateAnimation.yMax = Double(numElectronString)!
+        
         
         for _ in (1..<16) {
-            
-            // now how do I coreplot?
-            //Create a Queue for the Calculation
-            //We do this here so we can make testing easier.
-            let randomQueue = DispatchQueue.init(label: "randomQueue", qos: .userInitiated, attributes: .concurrent)
             
             tempStringForRangePlot = String(tempDouble)
             var oneAvgDomainSize = 0.0
@@ -181,7 +199,8 @@ struct ContentView: View {
                 
                 oneAvgDomainSize = flip.randomNumber(randomQueue: randomQueue, tempStr: tempStringForRangePlot, NStr: numElectronString )
                 sumAvgs += oneAvgDomainSize
-                print("sum domain avg", sumAvgs, "one average in loop", oneAvgDomainSize)
+                print("value returned from randomNumber()", oneAvgDomainSize)
+                
             }
             
             domainAverage = sumAvgs / 10 // finally the Y-AXIS value, average domain size promised for 10 iterations of one given temp
@@ -193,13 +212,17 @@ struct ContentView: View {
             let dataPoint: plotDataType = [.X: tempDouble, .Y: domainAverage]
             plotData.append(contentsOf: [dataPoint])
             
+            // problem
+            // x & y are swapping occasionally so that's weird
+            print("(x,y) =", dataPoint)
             flip.plotDataModel = self.plotDataModel
             
             tempDouble += 0.1   // increase temp for CorePlot
             
-            
         }
+        
         print("last temp", tempDouble, "domain avg", domainAverage)
+        
     }
     
     /*

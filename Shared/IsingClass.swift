@@ -5,6 +5,8 @@
 //  Created by Matthew Adas on 4/2/21.
 //
 
+// problem: should I calculate energy and magnetization here to update the GUI? probably not the instructions are not to calculate thermo properties until U is fluctuating about an average
+
 
 import Foundation
 import SwiftUI
@@ -20,6 +22,9 @@ class IsingClass: ObservableObject {
     var mu = 0.33
     var J = 1.0
     var k = 1.0
+    // problem: thermo properties, check that U is fluctuation about average before calculating
+    var thermoEnergy = 0.0
+    var thermoMagnetization = 0.0
     
     func energyCalculation(S: [Double], N: Int) -> Double {
         var firstTerm = 0.0
