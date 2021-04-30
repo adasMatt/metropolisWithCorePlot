@@ -18,7 +18,7 @@ typealias plotDataType = [CPTScatterPlotField : Double]
 struct ContentView: View {
     
     @State var tempString = "1.0"
-    @State var numElectronString = "100"
+    @State var numElectronString = "20"
     @State var energyString = ""
     @State var magnetizeString = ""
     
@@ -124,7 +124,7 @@ struct ContentView: View {
                 
                 // in the GUI, see plotForTempRange function
                 //
-                Button("(doesn't work yet, and in fact is quite a strange mess) Show Average Domain Size for Temp Range 0.5 to 2.0", action: plotForTempRange)
+                Button("(doesn't work yet, and in fact is quite a strange mess) Show Average Domain Size for Temp Range 0.5 to 2.0", action: plotForDomainAndTemp)
                     .padding()
                 
             }
@@ -170,17 +170,20 @@ struct ContentView: View {
     // y: avg of avg domain size (calculate 10 domains to get avg domain size for each temp)
     
     // weird problem is that if I don't use the other button, domain size is always zero here. When I do use the other button, this function takes the avg domain size from that function. It then adds that one value over and over.
-    func plotForTempRange() {
+    func plotForDomainAndTemp() {
         
         var tempDouble = 0.5
         var sumAvgs = 0.0
         var plotData :[plotDataType] =  []
         var domainAverage = 0.0
-        var tempStringForRangePlot = ""
+        var tempStringForPlot = ""
+        var oneAvgDomainSize = 0.0
+        
         // now how do I coreplot?
         //Create a Queue for the Calculation
         //We do this here so we can make testing easier.
-        let randomQueue = DispatchQueue.init(label: "randomQueue", qos: .userInitiated, attributes: .concurrent)
+        //let randomQueue = DispatchQueue.init(label: "randomQueue", qos: .userInitiated, attributes: .concurrent)
+        //let randomQueue = DispatchQueue(label: "tempRange")
         
         stateAnimation.xMin = 0.0
         //stateAnimation.xMax = 10.0*Double(numElectronString)! // if I change this, I need to change the following in flipRandomState: let M = 800*N
@@ -191,37 +194,35 @@ struct ContentView: View {
         
         for _ in (1..<16) {
             
-            tempStringForRangePlot = String(tempDouble)
-            var oneAvgDomainSize = 0.0
+            tempStringForPlot = String(tempDouble)
+            
             //print(tempDouble) //currently goes to 2.0
             // average of 10 results of the same temp
             for _ in (1..<11) {
                 
-                oneAvgDomainSize = flip.randomNumber(randomQueue: randomQueue, tempStr: tempStringForRangePlot, NStr: numElectronString )
+                oneAvgDomainSize = flip.plotDomainAvgAndTemp(NStr: numElectronString, tempStr: tempStringForPlot)
                 sumAvgs += oneAvgDomainSize
-                print("value returned from randomNumber()", oneAvgDomainSize)
+                //print("value returned from randomNumber()", oneAvgDomainSize)
                 
             }
             
             domainAverage = sumAvgs / 10 // finally the Y-AXIS value, average domain size promised for 10 iterations of one given temp
             
-            // for plot now
-            // y = domainAverage
-            // x = tempDouble
+            // for core plot
+            let dataPoint: plotDataType = [.X: tempDouble, .Y: domainAverage] // problem: x & y are swapping occasionally so that's weird
+            print("temp", tempDouble)
+            print("domainAv", domainAverage)
+            print("(x,y) =", dataPoint, "\n")
             
-            let dataPoint: plotDataType = [.X: tempDouble, .Y: domainAverage]
             plotData.append(contentsOf: [dataPoint])
             
-            // problem
-            // x & y are swapping occasionally so that's weird
-            print("(x,y) =", dataPoint)
             flip.plotDataModel = self.plotDataModel
             
             tempDouble += 0.1   // increase temp for CorePlot
             
         }
         
-        print("last temp", tempDouble, "domain avg", domainAverage)
+        print("domain avg", domainAverage)
         
     }
     

@@ -28,6 +28,9 @@ class StateAnimationClass: NSObject, ObservableObject {
     @Published var yMin = 0.0
     @Published var yMax = 100.0
     
+    @Published var thermoEnergy = 0.0
+    @Published var thermoMagnetization = 0.0
+    
     // this is a core plot thing that I don't need yet
     //var plotDataModel: PlotDataClass? = nil
     

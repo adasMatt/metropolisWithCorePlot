@@ -6,6 +6,7 @@
 //
 
 // problem: should I calculate energy and magnetization here to update the GUI? probably not the instructions are not to calculate thermo properties until U is fluctuating about an average
+// ES is calculated in flipRandomState so I don't think I need thermoEnergy or thermoMagnetization here
 
 
 import Foundation
@@ -23,6 +24,7 @@ class IsingClass: ObservableObject {
     var J = 1.0
     var k = 1.0
     // problem: thermo properties, check that U is fluctuation about average before calculating
+    // i don't think these are needed here
     var thermoEnergy = 0.0
     var thermoMagnetization = 0.0
     
