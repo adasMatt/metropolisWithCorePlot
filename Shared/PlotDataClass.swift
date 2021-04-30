@@ -3,7 +3,6 @@
 //  SwiftUICorePlotExample
 //  Shared
 //
-//  Created by Jeff Terry on 12/16/20.
 //
 
 import Foundation
@@ -37,10 +36,11 @@ class PlotDataClass: NSObject, ObservableObject {
         plotData = []
         
         //set the Plot Parameters
+        // want temp on x, domain size on y?
         changingPlotParameters.yMax = 4.0
         changingPlotParameters.yMin = -1.0
-        changingPlotParameters.xMax = 4.0
-        changingPlotParameters.xMin = -1.0
+        changingPlotParameters.xMax = 2.5       // go 0.5 further on both ends for this specific project
+        changingPlotParameters.xMin = 0.0
         changingPlotParameters.xLabel = "x"
         changingPlotParameters.yLabel = "y"
         changingPlotParameters.lineColor = .red()

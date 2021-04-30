@@ -77,14 +77,16 @@ struct ContentView: View {
         }
         .tabItem { Text("Animation") }
         
-        // temperature vs domain size
-        // calculate states for different temperatures
-        // compare size of domains
-        // x: temp (0:10)
-        // y: avg of avg domain size (calculate 10 domains for each temp)
+        
         
         VStack {
-      
+            
+            // temperature vs domain size
+            // calculate states for different temperatures
+            // compare size of domains
+            // x: temp (0:10)
+            // y: avg of avg domain size (calculate 10 domains for each temp)
+            
             CorePlot(dataForPlot: $plotDataModel.plotData, changingPlotParameters: $plotDataModel.changingPlotParameters)
                 .setPlotPadding(left: 10)
                 .setPlotPadding(right: 10)
@@ -96,25 +98,23 @@ struct ContentView: View {
             
             HStack{
                 
-                // think I'll take temp out actually and just plot it
+                /* think I'll take temp out actually and just plot it
+                // do temp range 0.5 - 2.0 in tenths (0.5, 0.6, 0.7, ..., 2.0)
                 HStack(alignment: .center) {
                     Text("temp:")
                         .font(.callout)
                         .bold()
                     TextField("temp", text: $tempString)
                         .padding()
-                }.padding()
+                }.padding() */
                 
-                // need to plot for different temperatures here, different "action" than other tabs in the GUI
+                // need to plot for different temperatures here, different "action" than other tabs in the GUI, see plotForTempRange function
                 //
-                Button("Generate random states", action: startTheFlipping)
+                Button("Show Average Domain Size for Temp Range 0.5 to 2.0", action: plotForTempRange)
                     .padding()
                 
             }
-            
-            
         }
-        
     }
     
     
@@ -145,12 +145,102 @@ struct ContentView: View {
         flip.randomNumber(randomQueue: randomQueue, tempStr: tempString, NStr: numElectronString )
         
     }
-    
+    /* */
+     
+     // do temp range 0.5 -> 2.0 in tenths (0.5, 0.6, 0.7, ..., 2.0)
+    // temperature vs domain size
+    // calculate states for different temperatures
+    // compare size of domains
+    // x: temp (0:10) do I need to go this high?
+    // y: avg of avg domain size (calculate 10 domains to get avg domain size for each temp)
     func plotForTempRange() {
         
-        var tempDouble = 1.0
-            startTheFlipping()
+        var tempDouble = 0.5
+        var sumAvgs = 0.0
+        var plotData :[plotDataType] =  []
+        var domainAverage = 0.0
+        var tempStringForRangePlot = ""
+        
+        for _ in (1..<16) {
+            
+            // now how do I coreplot?
+            //Create a Queue for the Calculation
+            //We do this here so we can make testing easier.
+            let randomQueue = DispatchQueue.init(label: "randomQueue", qos: .userInitiated, attributes: .concurrent)
+            
+            tempStringForRangePlot = String(tempDouble)
+            var oneAvgDomainSize = 0.0
+            print(tempDouble) //currently goes to 2.0
+            // average of 10 results of the same temp
+            for _ in (1..<11) {
+                
+                oneAvgDomainSize = flip.randomNumber(randomQueue: randomQueue, tempStr: tempStringForRangePlot, NStr: numElectronString )
+                sumAvgs += oneAvgDomainSize
+                print("sum domain avg", sumAvgs, "one average in loop", oneAvgDomainSize)
+            }
+            
+            domainAverage = sumAvgs / 10 // finally the Y-AXIS value, average domain size promised for 10 iterations of one given temp
+            
+            // for plot now
+            // y = domainAverage
+            // x = tempDouble
+            
+            
+            let dataPoint: plotDataType = [.X: tempDouble, .Y: domainAverage]
+            plotData.append(contentsOf: [dataPoint])
+            
+            flip.plotDataModel = self.plotDataModel
+            
+            tempDouble += 0.1   // increase temp for CorePlot
+            
+            
+            
+        }
+        print("last temp", tempDouble, "domain avg", domainAverage)
     }
+    
+    /*
+     func calculateSin_X(){
+             
+             let x = Double(xInput)
+             xInput = "\(x!)"
+             
+             var sin_x = 0.0
+             let actualsin_x = sin(x!)
+             var errorCalc = 0.0
+             
+             //pass the plotDataModel to the sinCalculator
+             sinCalculator.plotDataModel = self.plotDataModel
+             
+             //tell the sinCalculator to plot Data or Error
+             sinCalculator.plotError = self.isChecked
+             
+             //Calculate the new plotting data and place in the plotDataModel
+             sin_x = sinCalculator.calculate_sin_x(x: x!)
+             
+             print("The sin(\(x!)) = \(sin_x)")
+             print("computer calcuates \(actualsin_x)")
+             
+             sinOutput = "\(sin_x)"
+             
+             computerSin = "\(actualsin_x)"
+             
+             if(actualsin_x != 0.0){
+                 
+                 var numerator = sin_x - actualsin_x
+                 
+                 if(numerator == 0.0) {numerator = 1.0E-16}
+                 
+                 errorCalc = log10(abs((numerator)/actualsin_x))
+                 
+             }
+             else {
+                 errorCalc = 0.0
+             }
+             
+             error = "\(errorCalc)"
+         }
+     */
 
    
     

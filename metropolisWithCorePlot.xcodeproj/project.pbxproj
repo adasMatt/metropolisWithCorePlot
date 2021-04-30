@@ -65,6 +65,8 @@
 		7FAB778326338A9E00FB884E /* StateAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAB777126338A9E00FB884E /* StateAnimation.swift */; };
 		7FAB778426338A9E00FB884E /* StateAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAB777126338A9E00FB884E /* StateAnimation.swift */; };
 		7FAB778526338A9E00FB884E /* StateAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAB777126338A9E00FB884E /* StateAnimation.swift */; };
+		7FAB778E263C55EA00FB884E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAB76DD263388D800FB884E /* ContentView.swift */; };
+		7FAB7793263C55EB00FB884E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAB76DD263388D800FB884E /* ContentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -445,6 +447,7 @@
 			files = (
 				7FAB772D263388FB00FB884E /* CorePlot.swift in Sources */,
 				7FAB777826338A9E00FB884E /* IsingClass.swift in Sources */,
+				7FAB778E263C55EA00FB884E /* ContentView.swift in Sources */,
 				7FAB7741263388FB00FB884E /* CalculatePlotData.swift in Sources */,
 				7FAB778026338A9E00FB884E /* DrawingView.swift in Sources */,
 				7FAB778426338A9E00FB884E /* StateAnimation.swift in Sources */,
@@ -465,6 +468,7 @@
 			files = (
 				7FAB772E263388FB00FB884E /* CorePlot.swift in Sources */,
 				7FAB777926338A9E00FB884E /* IsingClass.swift in Sources */,
+				7FAB7793263C55EB00FB884E /* ContentView.swift in Sources */,
 				7FAB7742263388FB00FB884E /* CalculatePlotData.swift in Sources */,
 				7FAB778126338A9E00FB884E /* DrawingView.swift in Sources */,
 				7FAB778526338A9E00FB884E /* StateAnimation.swift in Sources */,

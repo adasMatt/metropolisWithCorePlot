@@ -5,8 +5,6 @@
 //  Created by Matthew Adas on 4/2/21.
 //
 
-// probably want to change some of these values, or make them user selectable huh :(
-
 
 import Foundation
 import SwiftUI
