@@ -6,7 +6,7 @@
 //
 
 // see plotForTempRange for issues
-// weird problem is that if I don't use the other button, domain size is always zero here. When I do use the other button, this function takes the avg domain size from that function
+// weird problem is that if I don't use the other button, domain size is always zero here. When I do use the other button, this function takes the avg domain size from that function. It then adds that one value over and over.
 
 import SwiftUI
 import CorePlot
@@ -157,7 +157,7 @@ struct ContentView: View {
     // x: temp (0:10) do I need to go this high?
     // y: avg of avg domain size (calculate 10 domains to get avg domain size for each temp)
     
-    // weird problem is that if I don't use the other button, domain size is always zero here. When I do use the other button, this function takes the avg domain size from that function
+    // weird problem is that if I don't use the other button, domain size is always zero here. When I do use the other button, this function takes the avg domain size from that function. It then adds that one value over and over.
     func plotForTempRange() {
         
         var tempDouble = 0.5
