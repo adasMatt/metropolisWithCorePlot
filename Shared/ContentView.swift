@@ -16,7 +16,7 @@ struct ContentView: View {
     @State var numElectronString = "20"
     @State var energyString = ""
     @State var magnetizeString = ""
-    @State var maxTempString = "15"
+    @State var maxTempString = "5"
     
     //@ObservedObject var ising = IsingClass() // actually not using IsingClass() here
     @ObservedObject var flip = FlipRandomState()
@@ -70,23 +70,17 @@ struct ContentView: View {
                     .padding(.bottom, 30)
                 */
                 
-                // button
+                
                 Button("Spin Animation", action: startTheFlipping)
                     .padding()
                 
-//                Text("See Animation Tab")
-//                    .padding(.bottom, 0)
-                
             }
-            //.tabItem { Text("Parameters") }
+
             
             VStack {
                 drawingView(redLayer: $stateAnimation.spinUpData, blueLayer: $stateAnimation.spinDownData, xMin:$stateAnimation.xMin, xMax:$stateAnimation.xMax, yMin:$stateAnimation.yMin, yMax:$stateAnimation.yMax)
-                    //.fixedSize(horizontal: true, vertical: true)
-                    //.frame(width: 200.0, height: 20.0)
                     
-                    // I removed this line is that bad?
-                    //.frame(minWidth: 400, idealWidth: 1800, maxWidth: 2800, minHeight: 400, idealHeight: 1800, maxHeight: 2800)
+                    
                     .padding()
                     .aspectRatio(1, contentMode: .fit)
                     .drawingGroup()
@@ -94,8 +88,6 @@ struct ContentView: View {
                     
                  // Stop the window shrinking to zero.
                  Spacer()
-                //Button("Generate random states", action: startTheFlipping)
-                    //.padding()
                 
             }
             
@@ -122,22 +114,19 @@ struct ContentView: View {
             
             HStack{
                 
+                VStack {
+                    Text("max temp (use integers)")
+                        .padding(.top)
+                        .padding(.bottom, 0)
+                    TextField("", text: $maxTempString)
+                        .padding(.horizontal)
+                        .frame(width: 100)
+                        .padding(.top, 0)
+                        .padding(.bottom, 30)
+                }
                 
-                Text("max temp")
-                    .padding(.top)
-                    .padding(.bottom, 0)
-                TextField("", text: $maxTempString)
-                    .padding(.horizontal)
-                    .frame(width: 100)
-                    .padding(.top, 0)
-                    .padding(.bottom, 30)
-                
-                // in the GUI, see plotForTempRange function
-                //
                 Button("Domain Size vs Temp", action: plotForDomainAndTemp)
                     .padding()
-             /*   Button("(doesn't work yet, and in fact is quite a strange mess) Show Average Domain Size for Temp Range 0.5 to 2.0", action: plotsomething)
-                    .padding()*/
                 
             }
         }
@@ -165,16 +154,14 @@ struct ContentView: View {
         energyString = String(flip.energyFromRandom)
         magnetizeString = String(flip.magnitizationFromRandom)
     }
-    /* */
-     
-     // do temp range 0.5 -> 2.0 in tenths (0.5, 0.6, 0.7, ..., 2.0)
-    // temperature vs domain size
-    // calculate states for different temperatures
-    // compare size of domains
-    // x: temp (0:10) do I need to go this high?
-    // y: avg of avg domain size (calculate 10 domains to get avg domain size for each temp)
     
-    // weird problem is that if I don't use the other button, domain size is always zero here. When I do use the other button, this function takes the avg domain size from that function. It then adds that one value over and over.
+     // do temp range 0.5 -> 2.0 in tenths (0.5, 0.6, 0.7, ..., 2.0)
+    /// temperature vs domain size
+    /// calculate states for different temperatures
+    /// compare size of domains
+    /// x: temp (0:10) do I need to go this high?
+    /// y: avg of avg domain size (calculate 10 domains to get avg domain size for each temp)
+    
     func plotForDomainAndTemp() {
         
         plotDataModel.zeroData()
@@ -182,7 +169,7 @@ struct ContentView: View {
         
         flip.plotDataModel = self.plotDataModel
         
-        var tempDouble = 0.5
+        var tempDouble = 0.3
         var sumAvgs = 0.0
         var plotData :[plotDataType] =  []
         var domainAverage = 0.0
@@ -191,28 +178,16 @@ struct ContentView: View {
         
         plotDataModel.changingPlotParameters.yMax = Double(numElectronString)!
         plotDataModel.changingPlotParameters.yMin = -1.0
-        plotDataModel.changingPlotParameters.xMax = Double(maxTempString)!
-        plotDataModel.changingPlotParameters.xMin = -1.0
+        plotDataModel.changingPlotParameters.xMax = Double(maxTempString)! + 0.5 // just making some room at the end
+        plotDataModel.changingPlotParameters.xMin = -0.2
         plotDataModel.changingPlotParameters.xLabel = "Temp"
         plotDataModel.changingPlotParameters.yLabel = "Domain Size"
         plotDataModel.changingPlotParameters.lineColor = .red()
         plotDataModel.changingPlotParameters.title = "Domain Size vs Temp"
         
-        // now how do I coreplot?
-        //Create a Queue for the Calculation
-        //We do this here so we can make testing easier.
-        //let randomQueue = DispatchQueue.init(label: "randomQueue", qos: .userInitiated, attributes: .concurrent)
-        //let randomQueue = DispatchQueue(label: "tempRange")
-//
-//        stateAnimation.xMin = 0.0
-//        //stateAnimation.xMax = 10.0*Double(numElectronString)! // if I change this, I need to change the following in flipRandomState: let M = 800*N
-//        stateAnimation.xMax = 10.0
-//        stateAnimation.yMin = 0.0
-//        stateAnimation.yMax = Double(numElectronString)!
-//
         
-        //
-        let xMax = Int(round(plotDataModel.changingPlotParameters.xMax )) * 10
+        //xMax is a bad name, this is how many times the for loop runs
+        let xMax = Int(round(plotDataModel.changingPlotParameters.xMax - 0.5)) * 10 - 1 // depending on the starting temp, adjustments are needed here for the number of points plotted
         
         for _ in (1..<xMax) {       // changing xMax in plotDataModel above also changes how many points are plotted
             

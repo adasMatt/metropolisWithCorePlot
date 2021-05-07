@@ -41,7 +41,7 @@ class StateAnimationClass: NSObject, ObservableObject {
        // spinUpData = [(1.0, 5.0)]
         //spinDownData = [(3.5, 6.5), (4.0, 6.5)]
         
-        print("initialized in StateAnimation")
+        //print("initialized in StateAnimation")
         
         // I removed this line is that bad?
         //spinUpData = []
