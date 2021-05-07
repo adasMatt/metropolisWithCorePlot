@@ -267,10 +267,10 @@ class FlipRandomState: ObservableObject {
     }
     
     
-    func plotDomainAvgAndTemp(NStr: String, tempStr: String) -> Double {
+    func plotDomainAvgAndTemp(NStr: String, temp: Double) -> Double {
         
         var state: [Double] = []
-        let temp = Double(tempStr)!
+        //let temp = Double(tempStr)! //dont think i need this
         let N = Int(NStr)!
         
         //var box = 0.0
@@ -433,9 +433,9 @@ class FlipRandomState: ObservableObject {
                     domainSizesArr[0] = domainSizesArr[0]+domainSizesArr[domainSizesArr.count-1]
                     domainSizesArr.popLast()        // why does swift lie about this not being used?
                 }
-                print("sizes of domains: \(domainSizesArr)")
+                //print("sizes of domains: \(domainSizesArr)")
                 let sumOfDomain = Double(state.count)
-                print("avg =", sumOfDomain / lengthOfDomainSizeArr)
+                //print("avg =", sumOfDomain / lengthOfDomainSizeArr)
                 
                 self.avgDomain = sumOfDomain / lengthOfDomainSizeArr
                 
@@ -460,8 +460,8 @@ class FlipRandomState: ObservableObject {
                     
         let dataPoint: plotDataType = [.X: 0.0, .Y: 0.0]
             plotDataModel!.appendData(dataPoint: [dataPoint])*/
-        //print("\navg domain size outside async: \(self.avgDomain)")
-        print("self.avgDomain =", self.avgDomain, "does it match the last from \"avg =\"?")
+        
+        //print("self.avgDomain =", self.avgDomain)
         return self.avgDomain
     }
     

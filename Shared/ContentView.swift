@@ -8,7 +8,6 @@
 // working on "thermodynamic properties"
 
 // see plotForTempRange for issues
-// weird problem is that if I don't use the other button, domain size is always zero here. When I do use the other button, this function takes the avg domain size from that function. It then adds that one value over and over.
 
 import SwiftUI
 import CorePlot
@@ -83,11 +82,6 @@ struct ContentView: View {
         
         VStack {
             drawingView(redLayer: $stateAnimation.spinUpData, blueLayer: $stateAnimation.spinDownData, xMin:$stateAnimation.xMin, xMax:$stateAnimation.xMax, yMin:$stateAnimation.yMin, yMax:$stateAnimation.yMax)
-                //.fixedSize(horizontal: true, vertical: true)
-                //.frame(width: 200.0, height: 20.0)
-                
-                // I removed this line is that bad?
-                //.frame(minWidth: 400, idealWidth: 1800, maxWidth: 2800, minHeight: 400, idealHeight: 1800, maxHeight: 2800)
                 .padding()
                 .aspectRatio(1, contentMode: .fit)
                 .drawingGroup()
@@ -104,12 +98,6 @@ struct ContentView: View {
         
         
         VStack {
-            
-            // temperature vs domain size
-            // calculate states for different temperatures
-            // compare size of domains
-            // x: temp (0:10)
-            // y: avg of avg domain size (calculate 10 domains for each temp)
             
             CorePlot(dataForPlot: $plotDataModel.plotData, changingPlotParameters: $plotDataModel.changingPlotParameters)
                 .setPlotPadding(left: 10)
@@ -139,7 +127,7 @@ struct ContentView: View {
         }
     }
     
-    func startTheFlipping() {   // problem: how do I get thermodynamic properties (energy and magnetization) from here to GUI
+    func startTheFlipping() {
         
         stateAnimation.spinDownData = []
         stateAnimation.spinUpData = []
@@ -160,30 +148,23 @@ struct ContentView: View {
         energyString = String(flip.energyFromRandom)
         magnetizeString = String(flip.magnitizationFromRandom)
     }
-    /* */
      
-     // do temp range 0.5 -> 2.0 in tenths (0.5, 0.6, 0.7, ..., 2.0)
     // temperature vs domain size
-    // calculate states for different temperatures
-    // compare size of domains
-    // x: temp (0:10) do I need to go this high?
-    // y: avg of avg domain size (calculate 10 domains to get avg domain size for each temp)
-    
-    // weird problem is that if I don't use the other button, domain size is always zero here. When I do use the other button, this function takes the avg domain size from that function. It then adds that one value over and over.
+    /// do temp range 0.5 -> 2.0 in tenths (0.5, 0.6, 0.7, ..., 2.0)
+    /// calculate states for different temperatures
+    /// compare size of domains
+    /// x: temp 0 to 10
+    /// y: avg of avg domain size (calculate 10 domains to get avg domain size for each temp)
     func plotForDomainAndTemp() {
+        
+        print("\n\nbegin plot domain and temp")
         
         var tempDouble = 0.5
         var sumAvgs = 0.0
         var plotData :[plotDataType] =  []
         var domainAverage = 0.0
-        var tempStringForPlot = ""
         var oneAvgDomainSize = 0.0
         
-        // now how do I coreplot?
-        //Create a Queue for the Calculation
-        //We do this here so we can make testing easier.
-        //let randomQueue = DispatchQueue.init(label: "randomQueue", qos: .userInitiated, attributes: .concurrent)
-        //let randomQueue = DispatchQueue(label: "tempRange")
         
         stateAnimation.xMin = 0.0
         //stateAnimation.xMax = 10.0*Double(numElectronString)! // if I change this, I need to change the following in flipRandomState: let M = 800*N
@@ -194,22 +175,22 @@ struct ContentView: View {
         
         for _ in (1..<16) {
             
-            tempStringForPlot = String(tempDouble)
-            
+            sumAvgs = 0.0
             //print(tempDouble) //currently goes to 2.0
             // average of 10 results of the same temp
             for _ in (1..<11) {
                 
-                oneAvgDomainSize = flip.plotDomainAvgAndTemp(NStr: numElectronString, tempStr: tempStringForPlot)
+                oneAvgDomainSize = flip.plotDomainAvgAndTemp(NStr: numElectronString, temp: tempDouble)
                 sumAvgs += oneAvgDomainSize
-                //print("value returned from randomNumber()", oneAvgDomainSize)
+                //print("value returned from plotDomainAvgAndTemp()", oneAvgDomainSize)
                 
             }
             
             domainAverage = sumAvgs / 10 // finally the Y-AXIS value, average domain size promised for 10 iterations of one given temp
+            // tried using round() for domainAverage to hundrenth but this did not help with the switching x/y values
             
             // for core plot
-            let dataPoint: plotDataType = [.X: tempDouble, .Y: domainAverage] // problem: x & y are swapping occasionally so that's weird
+            let dataPoint: plotDataType = [.X: tempDouble, .Y: domainAverage] // problem: x & y are swapping occasionally, so that's weird
             print("temp", tempDouble)
             print("domainAv", domainAverage)
             print("(x,y) =", dataPoint, "\n")
@@ -219,6 +200,9 @@ struct ContentView: View {
             flip.plotDataModel = self.plotDataModel
             
             tempDouble += 0.1   // increase temp for CorePlot
+            tempDouble = round(10.0 * tempDouble) / 10.0 // fixes addition error, (Ex: We don't want 0.6 += 0.1 to give 0.69999999)
+            
+            
             
         }
         
