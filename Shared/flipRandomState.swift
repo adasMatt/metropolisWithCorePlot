@@ -5,6 +5,13 @@
 //  Created by Matthew Adas on 4/9/21.
 //
 // working on "thermodynamic properties"
+//
+//  flipRandomState.swift
+//  metropolisAlgorithm
+//
+//  Created by Matthew Adas on 4/9/21.
+//
+// working on "thermodynamic properties"
 
 import Foundation
 import SwiftUI
@@ -74,7 +81,7 @@ class FlipRandomState: ObservableObject {
         
         // Start random flipping
         // var start = DispatchTime.now() // starting time of the integration
-        randomQueue.async {
+       // randomQueue.async {
             //DispatchQueue.concurrentPerform(iterations: Int(iterations), execute: { index in
             //DispatchQueue.concurrentPerform(iterations: 1, execute: { index in
                 for n in 1..<M {
@@ -164,7 +171,7 @@ class FlipRandomState: ObservableObject {
             // average domain size
             // count + in a row, count - in a row, average size
             // probably just make it into an observable object class right
-            
+            /*
             var counted = 0
             var domainSizesArr: [Int] = []
             
@@ -231,7 +238,7 @@ class FlipRandomState: ObservableObject {
                 
             }
             
-            ///*
+            //
             // avg domain size
             // sum Of domains is just the length of the state array of course
             // is there still an issue here carried over from the possible missing lonely spin?
@@ -249,7 +256,9 @@ class FlipRandomState: ObservableObject {
                     lengthOfDomainSizeArr = Double(domainSizesArr.count)
                 }
 
-            }//*/
+            }//
+         
+         */
             
     
         // ex from Dr Terry: 20x20 array
@@ -257,7 +266,7 @@ class FlipRandomState: ObservableObject {
         // 5,2 -> 5 + (2 * 20) = 45
         // [0, 1] in 20x20 matrix -> 20th element
                 
-        } // end of queue
+      //  } // end of queue
         
         // for later testing
         // print("energyFromRandom =", self.energyFromRandom, "after async \n")
@@ -267,10 +276,10 @@ class FlipRandomState: ObservableObject {
     }
     
     
-    func plotDomainAvgAndTemp(NStr: String, temp: Double) -> Double {
+    func plotDomainAvgAndTemp(NStr: String, tempStr: String) -> Double {
         
         var state: [Double] = []
-        //let temp = Double(tempStr)! //dont think i need this
+        let temp = Double(tempStr)!
         let N = Int(NStr)!
         
         //var box = 0.0
@@ -281,6 +290,7 @@ class FlipRandomState: ObservableObject {
         // create cold start, all spin up (red layer I think)
         state.removeAll()
         
+        //ColdStart
         for _ in 0..<N {
             state.append(-1)
         }
@@ -351,118 +361,74 @@ class FlipRandomState: ObservableObject {
             // average domain size
             // count + in a row, count - in a row, average size
             // probably just make it into an observable object class right
+//
+//            var counted = 0
+//            var domainSizesArr: [Int] = []
+//
+        var modArr = state.map{$0}         // modArr probably needs to start empty actually, and set equal to state either after or during the randomNumber function
+//
+//      //      print("modArr =", modArr)
+//
+        let lenModArr = modArr.count    // changes each time something is counted in modArr/finalArray ...yea idk what this will need to be changed to within the class yet
+        
+        var domains = 1.0
+        var flips = 0
+        
+        for i in 0..<lenModArr{
             
-            var counted = 0
-            var domainSizesArr: [Int] = []
             
-            var modArr = state.map{$0}         // modArr probably needs to start empty actually, and set equal to state either after or during the randomNumber function
+            var previous = 0.0
+            var next = 0.0
+            var current = 0.0
             
-            var lenModArr = modArr.count    // changes each time something is counted in modArr/finalArray ...yea idk what this will need to be changed to within the class yet
-
-            //func countPosFunc(funcArr: [Int]) -> (Int, [Int]) {
-            func countPosFunc(funcArr: [Double]) -> [Double] {
-                counted = 0                     // reset to 0 each time the function runs
-                let N = funcArr.count
-                var modFinalArray: [Double] = []   // I mean I want to throw it out each time so I can generate a new one each time maybe?
-
-                for item in (0...N-1) {
-                    if funcArr[item] == 1.0 {
-                        counted += 1
-                        //totalCount += 1         // add to global variable totalCount
-                    }
-                    else {break}                // break the for loop and return counted instances of consecutive -1
-                }
-
-                // discard the array members already examined?
+            
+            if (i == 0 ) {
+            
+                previous = modArr[lenModArr-1]
+               // next = modArr[i+1]
+                current = modArr[i]
                 
-                if counted == N {return [0]} // do not continue reducing modArray if it is on it's final domain
-                for item in (counted...N-1) {
-                    modFinalArray.append(funcArr[item]) //?
-                }
-                lenModArr = modFinalArray.count
-                //print(modFinalArray)
-                return modFinalArray
-            }
-
-            func countNegFunc(funcArr: [Double]) -> [Double] {
-                counted = 0
-                let N = funcArr.count
-                var modFinalArray: [Double] = []
-
-                for item in (0...N-1) {
-                    if funcArr[item] == -1.0 {
-                        counted += 1
-                        //totalCount += 1
-                    }
-                    else {break}
-                }
                 
-                if counted == N {return [0]}
-                for item in (counted...N-1){
-                    modFinalArray.append(funcArr[item])
-                }
-                lenModArr = modFinalArray.count
-                //print(modFinalArray)
-                return modFinalArray
             }
-
-            while lenModArr > 1 { // problem if I have a lonely spin at the very end, or maybe not since I'm typically working with large N anyway? Can't I afford to lose that last lonely spin?
-                //print(lenModArr)
-                modArr = countNegFunc(funcArr: modArr)
-                if counted > 0 {domainSizesArr.append(counted)} //  obviously I only want to append non-zero size domains
-                //print(modArr, counted)
-                //print(lenModArr)
-                modArr = countPosFunc(funcArr: modArr)
-                if counted > 0 {domainSizesArr.append(counted)}
-                //print(modArr, counted, totalCount)
+            else if ( i == lenModArr - 1) {
+                
+                previous = modArr[i-1]
+                next = modArr[0]
+                current = modArr[i]
+                
+                
+            }
+            else{
+                
+                previous = modArr[i-1]
+                //next = modArr[i+1]
+                current = modArr[i]
                 
             }
             
+            if (previous * current < 0.0){
+                domains += 1.0
+                flips += 1
+            }
+            
+            
+            
+        }
+        
+        if (flips != 0) {domains -= 1.0}
+        
+   //     print("number of domains", domains)
+   //     print("modArr =", modArr)
+        
             // avg domain size
             // sum Of domains is just the length of the state array of course
-            // is there still an issue here carried over from the possible missing lonely spin?
-            let lengthOfDomainSizeArr = Double(domainSizesArr.count)
-            
-            if lengthOfDomainSizeArr == 0.0 {   // pass if length is 0
-                //print("avg domain size: 1.0")
-            }
-            
-            else {
-                // compare first and last value in "state", if they are equal, do not separate domains (combine 1st and last domain because they are actually the same domain)
-                if state[0] == state[N-1] {
-                    domainSizesArr[0] = domainSizesArr[0]+domainSizesArr[domainSizesArr.count-1]
-                    domainSizesArr.popLast()        // why does swift lie about this not being used?
-                }
-                //print("sizes of domains: \(domainSizesArr)")
-                let sumOfDomain = Double(state.count)
-                //print("avg =", sumOfDomain / lengthOfDomainSizeArr)
-                
-                self.avgDomain = sumOfDomain / lengthOfDomainSizeArr
-                
-                
-                //print("\nset state var avg domain size within async: \(self.avgDomain)")
-            }
-            
-            //integralArray.append(self.calculateMonteCarloIntegral(dimensions: 1, guesses: Int32(guesses), index: index))
-        //})
-          
-        // ex: 20x20 array
-        // value [i,j] in 1D array = value[i + (j * number of elements in a row)]
-        // 5,2 -> 5 + (2 * 20) = 45
-        // [0, 1] in 20x20 matrix -> 20th element
-                
-        //} // end of queue
-        //print("energyFromRandom =", self.energyFromRandom, "after async \n")
-        //print("ising thermoEnergy =", self.ising.thermoEnergy, "after async \n")
-        //  ////////////////////////////
+            self.avgDomain = Double(N) / domains
         
-        /*          // but i'm not plotting error I'm plotting temp and avg domain now
-                    
-        let dataPoint: plotDataType = [.X: 0.0, .Y: 0.0]
-            plotDataModel!.appendData(dataPoint: [dataPoint])*/
         
-        //print("self.avgDomain =", self.avgDomain)
+
+   //     print("self.avgDomain =", self.avgDomain, "does it match the last from \"avg =\"?")
         return self.avgDomain
     }
+    
     
 }
