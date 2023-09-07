@@ -27,8 +27,8 @@ The success of the Metropolis Algorithm using Swift in this study is easily seen
 
 
 --------------------------------------------------------------
-![Fig 1 spin animation low temp](https://github.com/adasMatt/FunnyFarm/blob/main/imagesJPG/lowTemp.jpg)   
-![Fig 1 spin animation low temp](https://github.com/adasMatt/FunnyFarm/blob/main/images/lowTemp.png)   
+![Fig 1 spin animation low temp](https://github.com/adasMatt/metropolisWithCorePlot/blob/main/imagesJPG/lowTemp.jpg)   
+![Fig 1 spin animation low temp](https://github.com/adasMatt/metropolisWithCorePlot/blob/main/images/lowTemp.png)   
 Fig. 1 - Spin animation using N = 20 and T = 0.7 (N and T are chosen on another tab within the GUI). The left of the diagram is the “cold state” (all red) beginning array, while on the right is the final state after iterations of the randomized spin flips. One can easily see that the final state does have a large blue domain (spin down electrons) and small red domain (spin up electrons).   
 
 
@@ -37,7 +37,7 @@ For higher temperatures (those greater than 0.8 as shown in Fig. 2), the spins b
 
 
 --------------------------------------------------------------
-![Fig 2 spin animation high temp](https://github.com/adasMatt/FunnyFarm/blob/main/images/highTemp.png)   
+![Fig 2 spin animation high temp](https://github.com/adasMatt/metropolisWithCorePlot/blob/main/images/highTemp.png)   
 Fig. 2 - Spin animation using N = 50 and T = 2.0. Here, the final state has significantly smaller average domains, which is the cause of decreasing magnetism at higher temperatures.   
 
 
@@ -47,7 +47,7 @@ A comparison of domains vs temperature was plotted separately, and allows a maxi
 
 
 --------------------------------------------------------------   
-![Fig 3 Domain vs temp](https://github.com/adasMatt/FunnyFarm/blob/main/images/domainSizeVsTemp.png)    
+![Fig 3 Domain vs temp](https://github.com/adasMatt/metropolisWithCorePlot/blob/main/images/domainSizeVsTemp.png)    
 Fig. 3 - Domain Size vs Temperature. The user may select the number of electrons and a maximum temperature to observe. In this example it is clear that the average domain size drops off rapidly and then levels out, a sign of demagnetization of the material.
    
 
