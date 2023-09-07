@@ -27,7 +27,6 @@ The success of the Metropolis Algorithm using Swift in this study is easily seen
 
 
 --------------------------------------------------------------
-![Fig 1 spin animation low temp](https://github.com/adasMatt/metropolisWithCorePlot/blob/main/imagesJPG/lowTemp.jpg)   
 ![Fig 1 spin animation low temp](https://github.com/adasMatt/metropolisWithCorePlot/blob/main/images/lowTemp.png)   
 Fig. 1 - Spin animation using N = 20 and T = 0.7 (N and T are chosen on another tab within the GUI). The left of the diagram is the “cold state” (all red) beginning array, while on the right is the final state after iterations of the randomized spin flips. One can easily see that the final state does have a large blue domain (spin down electrons) and small red domain (spin up electrons).   
 
