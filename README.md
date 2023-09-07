@@ -1,45 +1,64 @@
 # Ising Model: Metropolis Algorithm
-
+[//]: <> (a lot of this has been temporarily modified to exclude equations previously given for the final class write up, until I figure out how to write up the equations. Probably a lot is in the Google Drive? Be thoughful when uncommenting lines as some formatting has been undone)
+[//]: <> (am I missing the citations? gotta check this)
 The Ising Model is meant to simulate magnetic materials undergoing spin change with an applied temperature and magnetic field, and here the Metropolis Algorithm is used for the material simulation. The Metropolis Algorithm is a type of Monte Carlo algorithm, designed to show how the set of electrons in a magnetic material randomly change their spin according to the probability of a system energy being allowed. The code developed here is successful in simulating the random spin flip of electrons in a material with an applied temperature, as well as showing average domain and temperature relation.
-	
 
 ## Background
-The Ising model considers a number of magnetic dipoles fixed in place as part of a linear chain, with spin being the only variable (the dipoles are “fixed,” so there is no momentum or change in position to consider). The energy of the whole system of dipoles depends on the spin interaction of neighboring dipoles, as well as an external magnetic field (with no external magnetic field, the system is unstable). This energy is given by:
+The Ising model considers a number of magnetic dipoles fixed in place as part of a linear chain, with spin being the only variable (the dipoles are “fixed,” so there is no momentum or change in position to consider). The energy of the whole system of dipoles depends on the spin interaction of neighboring dipoles, as well as an external magnetic field (with no external magnetic field, the system is unstable).
 
-...  [image of equation (1)] ...
-
-with J being a measure of strength of spin interaction, s<sub>i</sub> is for an individual spin (±½), B is for magnetic field, and 𝜇<sub>B</sub> is of course the Bohr magneton [1].
-
+[//]: <>  (This energy is given by: [image of equation 1] ...with J being a measure of strength of spin interaction, s<sub>i</sub> is for an individual spin ±½, B is for magnetic field, and 𝜇<sub>B</sub> is of course the Bohr magneton [1].)
 
 ## Model and Methods 
-To simulate the Ising model, this article considers the Metropolis Algorithm, of which a more thorough description as well as how the quantities used are scaled is given in the textbook by Landau, Paez, & Bordeianu [1]. The main key here is to start with an array of N dipoles (or electrons as they are referred to in the program), and run a loop to have the program choose a dipole at random to flip (generating a trial state), then calculate the energy of the trial state as part of determining whether the spin will indeed flip. The trial configuration and state configuration (the beginning configuration until successfully changed) energies are each calculated using Eq. 1, and if E<sub>trial</sub> is less than E<sub>state</sub>, then the trial configuration is accepted and the chosen spin is flipped. In other words the trial configuration is returned as the state configuration during the next loop. However, this does not inherently mean that if E<sub>trial</sub> is greater than E<sub>state</sub> then the trial configuration is denied.
+To simulate the Ising model, this article considers the Metropolis Algorithm, of which a more thorough description as well as how the quantities used are scaled is given in the textbook by Landau, Paez, & Bordeianu [1]. The main key here is to start with an array of N dipoles (or electrons as they are referred to in the program), and run a loop to have the program choose a dipole at random to flip (generating a trial state), then calculate the energy of the trial state as part of determining whether the spin will indeed flip. The trial configuration and state configuration (the beginning configuration until successfully changed) energies are each calculated, and if E<sub>trial</sub> is less than E<sub>state</sub>, then the trial configuration is accepted and the chosen spin is flipped. In other words the trial configuration is returned as the state configuration during the next loop. However, this does not inherently mean that if E<sub>trial</sub> is greater than E<sub>state</sub> then the trial configuration is denied.
 
-In the case that E<sub>trial</sub> is determined to be greater than E<sub>state</sub>, then the next step is for the probability of the trial state to be calculated. The calculation for probability normally uses the partition function from thermodynamics in the following manner:
+In the case that E<sub>trial</sub> is determined to be greater than E<sub>state</sub>, then the next step is for the probability of the trial state to be calculated. The calculation for probability normally uses the partition function from thermodynamics. 
 
-... [ images of equations (2)(3)] ...
+[//]: <> (from thermodynamics in the following manner: [ images of equations 2 & 3], did I have these in google drive?)
 
-............................... still a work in progress ................................
+[//]: <> (Where Z\(T\) is the partition function, P\(E<sub>𝛼</sub> , T\) is the probability of a given state, and the components 𝛼j is the entire array of spins, kB is the Boltzmann constant, T is the temperature applied to the material. For the Metroplolis...)
+For the Metropolis Algorithm however, it is a relative probability of the trial configuration and state configuration that is being used. In this case the partition function cancels out.   
 
-Where Z(T) is the partition function, P(E𝛼 , T) is the probability of a given state, and the components 𝛼j is the entire array of spins, kB is the Boltzmann constant, T is the temperature applied to the material. For the Metropolis Algorithm however, it is a relative probability of the trial configuration and state configuration that is being used. In this case the partition function cancels out, leaving simply:
-(4)
-(5)
- Once this relative probability is calculated for the new trial state, a random probability r is generated for comparison (i.e.: a random number generated by a programming function between zero and one). If R is greater than r, then the trial state is still accepted despite having an unusually large energy. This time around, there does exist the inherent implication that if R is less than r, then the trial configuration is denied and the state configuration is returned to the next loop iteration.
-Results 
-The success of the Metropolis Algorithm using Swift in this study is easily seen using a display of a 1D spin animation as in Fig. 1. The expectation is that at low temperature, 
-Fig. 1 - Spin animation using N = 20 and T = 0.7 (N and T are chosen on another tab within the GUI). The left of the diagram is the “cold state” (all red) beginning array, while on the right is the final state after iterations of the randomized spin flips. One can easily see that the final state does have a large blue domain (spin down electrons) and small red domain (spin up electrons). 
+[//]: <> (leaving simply: eqs 4 & 5)
+
+Once this relative probability is calculated for the new trial state, a random probability r is generated for comparison (i.e.: a random number generated by a programming function between zero and one). If R is greater than r, then the trial state is still accepted despite having an unusually large energy. This time around, there does exist the inherent implication that if R is less than r, then the trial configuration is denied and the state configuration is returned to the next loop iteration.   
+
+## Results 
+The success of the Metropolis Algorithm using Swift in this study is easily seen using a display of a 1D spin animation as in Fig. 1. The expectation is that at low temperature, the system is very slow to equilibrate, meaning the spins flip very little. This leads to a large average domain size for low temperatures (just about anything equal to 0.7 or less).   
+
+
 --------------------------------------------------------------
-the system is very slow to equilibrate, meaning the spins flip very little. This leads to a large average domain size for low temperatures (just about anything equal to 0.7 or less).  For higher temperatures (those greater than 0.8 as shown in Fig. 2), the spins begin to flip noticeably more frequently, and domain sizes become smaller. This decrease in average domain size is a sign of magnetization decreasing due to being exposed to higher temperature as expected when approaching the Curie temperature.
-	A comparison of domains vs 
-Fig. 2 - Spin animation using N = 50 and T = 2.0. Here, the final state has significantly smaller average domains, which is the cause of decreasing magnetism at higher temperatures. 
+![Fig 1 spin animation low temp](https://github.com/adasMatt/FunnyFarm/blob/main/imagesJPG/lowTemp.jpg)   
+![Fig 1 spin animation low temp](https://github.com/adasMatt/FunnyFarm/blob/main/images/lowTemp.png)   
+Fig. 1 - Spin animation using N = 20 and T = 0.7 (N and T are chosen on another tab within the GUI). The left of the diagram is the “cold state” (all red) beginning array, while on the right is the final state after iterations of the randomized spin flips. One can easily see that the final state does have a large blue domain (spin down electrons) and small red domain (spin up electrons).   
+
+
 --------------------------------------------------------------
-temperature was plotted separately, and allows a maximum temperature chosen by the user (there is a recommended maximum of 3.0, going higher than this does not provide significantly different results) for convenience. Fig. 3 displays this comparison, which shows evidence of the rapid falloff of average domain size as temperature increases, as was said to be expected earlier in this paper.
+For higher temperatures (those greater than 0.8 as shown in Fig. 2), the spins begin to flip noticeably more frequently, and domain sizes become smaller. This decrease in average domain size is a sign of magnetization decreasing due to being exposed to higher temperature as expected when approaching the Curie temperature.   
+
+
+--------------------------------------------------------------
+![Fig 2 spin animation high temp](https://github.com/adasMatt/FunnyFarm/blob/main/images/highTemp.png)   
+Fig. 2 - Spin animation using N = 50 and T = 2.0. Here, the final state has significantly smaller average domains, which is the cause of decreasing magnetism at higher temperatures.   
+
+
+--------------------------------------------------------------  
+A comparison of domains vs temperature was plotted separately, and allows a maximum temperature chosen by the user (there is a recommended maximum of 3.0, going higher than this does not provide significantly different results) for convenience. Fig. 3 displays this comparison, which shows evidence of the rapid falloff of average domain size as temperature increases, as was said to be expected earlier in this paper.   
+
+
+
+--------------------------------------------------------------   
+![Fig 3 Domain vs temp](https://github.com/adasMatt/FunnyFarm/blob/main/images/domainSizeVsTemp.png)    
+Fig. 3 - Domain Size vs Temperature. The user may select the number of electrons and a maximum temperature to observe. In this example it is clear that the average domain size drops off rapidly and then levels out, a sign of demagnetization of the material.
+   
+
+
+--------------------------------------------------------------  
 Given the steep falloff of the domain sizes in the plot given by Fig. 3, it can be inferred  that a logarithm plot will not give easily intuitive understanding of the Ising Model while using different temperatures, since it is in the nature of a logarithm plot to mislead the true scale of what the experimenter is trying to see. In this case, the main concern is the falloff in domain size which will not give the right impression when using a logarithm plot.
-Conclusion 
+
+## Conclusion 
 Although there is great success in using the Metropolis Algorithm, the Ising model can be further improved by using a newer method named Wang-Landau sampling (WLS). The difference is that while the Metropolis Algorithm relies heavily on the cancellation of the partition function, WLS estimates the density of states g(E) by using a random walk in tandem with a histogram, until the histogram is flat to ensure higher accuracy of g(E). The density of states is unknown at first, the way it is determined is that it is at first set equal to one, and then the density of states is modified during a similar spin flipping process given by the Metropolis Algorithm discussed throughout this study.
 
-Fig. 3 - Domain Size vs Temperature. The user may select the number of electrons and a maximum temperature to observe. In this example it is clear that the average domain size drops off rapidly and then levels out, a sign of demagnetization of the material.
---------------------------------------------------------------
-References
-[1] Landau, R. H., José Páez Mejía Manuel, & Bordeianu, C. C. (2012). A survey of computational physics: introductory computational science. Princeton University Press. 
-[2] Wang, F., & Landau, D. P. (2001). Efficient, Multiple-Range Random Walk Algorithm to Calculate the Density of States. Physical Review Letters, 86(10), 2050–2053. https://doi.org/10.1103/physrevlett.86.2050 
+## References
+[1] Landau, R. H., José Páez Mejía Manuel, & Bordeianu, C. C. (2012). A survey of computational physics: introductory computational science. Princeton University Press.   
+[2] Wang, F., & Landau, D. P. (2001). Efficient, Multiple-Range Random Walk Algorithm to Calculate the Density of States. Physical Review Letters, 86(10), 2050–2053. https://doi.org/10.1103/physrevlett.86.2050   
 
